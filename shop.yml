@@ -1,0 +1,17 @@
+sell:     #item-price
+  - diamond-500
+  - iron_ingot-20
+
+buy:
+  example_item:
+    name: Mending Enchanted Book
+    type: ENCHANTED_BOOK    #key item
+    amount: 1
+    price: 100000
+    limit: 1                #set limit per day (0 for unlimited)
+    enchants:
+      type: book            #type (book|normal)
+      id:
+        - mending-1         #name-level
+    lore:
+      - "Mua tại shop"

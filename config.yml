@@ -1,0 +1,7 @@
+disable-village-trade: true
+slot-sell: 54
+slot-shop: 54
+itemsadder:
+  enable: false
+  namespace:
+  - itemsadder
