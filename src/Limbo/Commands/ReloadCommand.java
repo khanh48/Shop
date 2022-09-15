@@ -10,9 +10,9 @@ import Limbo.Message.Message;
 public class ReloadCommand implements CommandExecutor{
 
 	@Override
-	public boolean onCommand(CommandSender arg0, Command arg1, String arg2, String[] arg3) {
+	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] arg) {
 		SimpleShop.getIntance().reload();
-		SimpleShop.sendMessage(arg0, Message.RELOAD);
+		SimpleShop.sendMessage(sender, Message.RELOAD);
 		return false;
 	}
 

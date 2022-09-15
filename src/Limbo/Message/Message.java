@@ -1,9 +1,11 @@
 package Limbo.Message;
 
+import java.lang.String;
+
 import Limbo.SimpleShop;
 
 public enum Message {
-	TRADE_VILLAGE_MSG(SimpleShop.getIntance().message.getConfig().getString("message.trade_msg")),
+	TRADE_VILLAGE_MSG(SimpleShop.getIntance().message.getConfig().getString("message.trade_village_msg")),
 	TAKE_MONEY(SimpleShop.getIntance().message.getConfig().getString("message.take_money")),
 	BALANCE(SimpleShop.getIntance().message.getConfig().getString("message.balance")),
 	HASNT_PERM(SimpleShop.getIntance().message.getConfig().getString("message.hasnt_perm")),
@@ -14,8 +16,12 @@ public enum Message {
 	CONSOLE(SimpleShop.getIntance().message.getConfig().getString("message.console")),
 	RELOAD(SimpleShop.getIntance().message.getConfig().getString("message.reload"));
 	
-	public final String getMsg;
+	public final String getMessage;
 	private Message(String msg) {
-		this.getMsg = msg;
+		this.getMessage = msg;
 	}
+	
+	public String replace(String target, String replacement) {
+        return this.getMessage.replaceAll("(?i)" + target, replacement);
+    }
 }

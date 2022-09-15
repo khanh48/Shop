@@ -2,7 +2,7 @@ sell:     #item-price
   - diamond-500
   - iron_ingot-20
 
-buy:
+items:
   example_item:
     name: Mending Enchanted Book
     type: ENCHANTED_BOOK    #key item

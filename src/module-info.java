@@ -3,5 +3,5 @@ module NSS {
 	requires ItemsAdder;
 	requires Vault;
 	requires java.logging;
-	requires citizensapi;
+	requires Citizens;
 }

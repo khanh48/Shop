@@ -16,7 +16,7 @@ public class DisableTrade implements Listener{
 		if(!e.getRightClicked().getType().equals(EntityType.VILLAGER)) return;
 		Villager villager = (Villager) e.getRightClicked();
 		if(villager.getProfession().equals(Villager.Profession.NONE)) return;
-		if(SimpleShop.getIntance().getConfig().getBoolean("disable-village-trade")) return;
+		if(!SimpleShop.getIntance().getConfig().getBoolean("disable-village-trade")) return;
 		if(e.getPlayer().hasPermission("shop.bypass")) return;
 		if(villager.hasAI() && villager.hasGravity()) {
 			e.setCancelled(true);

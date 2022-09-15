@@ -31,17 +31,21 @@ public class Shop implements Listener{
 	Inventory inv;
 	ShopLoader shopLoader;
 	SimpleShop m;
-	Calendar date = Calendar.getInstance();
-	private static HashMap<Integer, Double> mapPrice = new HashMap<>();
-	HashMap<String, Integer> listLimit = new HashMap<>();
-	private static Enchantments enchant = new Enchantments();
+	Calendar date;
+	private static HashMap<Integer, Double> mapPrice;
+	HashMap<String, Integer> listLimit;
+	private static Enchantments enchant;
 	
 	public Shop() {
 		this.m = SimpleShop.getIntance();
+		date = Calendar.getInstance();
+		enchant = new Enchantments();
+		listLimit = new HashMap<>();
+		mapPrice = new HashMap<>();
+		shopLoader = new ShopLoader();
 		int con = m.getConfig().getInt("slot-shop");
 		INVSLOT = con > 54? 54 : con < 18? 18 : con;
 		SELLBUTTON = INVSLOT - 1;
-		shopLoader = new ShopLoader();
 		inv = Bukkit.createInventory(null, INVSLOT, "SHOP");
 		inv.setItem(SELLBUTTON, Sell.createGuiItem(Material.BOOK, true, "SELL SHOP", 1));
 	}
@@ -50,42 +54,42 @@ public class Shop implements Listener{
 		int count = 0;
 		shopLoader = new ShopLoader();
 		mapPrice.clear();
-		
-			for(ShopLoader map : shopLoader.getMap().values()) {
-				ItemStack is;
-				if(map.isItemsAdder() && m.itemsAdderIsEnable()) {
-					CustomStack ia = CustomStack.getInstance(map.getType().toLowerCase());
-					is = ia.getItemStack();
-				}
-				else
-					is = new ItemStack(Material.getMaterial(map.getType()), 1);
-				ItemMeta im = is.getItemMeta();
-				im.setDisplayName(SimpleShop.nonFormat(map.getName()));
-				map.getLore().add(0 ,"Giá $" + String.valueOf(map.getPrice()));
-				im.setLore(SimpleShop.format(map.getLore()));
-				map.getLore().remove(0);
-				try {
-					for (int en = 0; en < map.getID().size(); en++) {
-						Enchantment enc = enchant.getEnchantment(map.getID().get(en));
-						if(enc == null) continue;
-						if(map.getTypeEnchant().equals("book")) {
-							EnchantmentStorageMeta enchantBook = (EnchantmentStorageMeta) im;
-							enchantBook.addStoredEnchant(enc, map.getLevel().get(en), true);
-							im = (ItemMeta)enchantBook;
-						}
-						else if(map.getTypeEnchant().equals("normal")){
-							im.addEnchant(enc, map.getLevel().get(en), true);
-						}
-					}
-				}catch (Exception e) {
-				}
-				is.setItemMeta(im);
-				
-				mapPrice.put(count, map.getPrice());
-				is.setAmount(map.getAmount() / 1 > 0? map.getAmount() : 1);
-				inv.setItem(count, is);
-				count++;
+
+		for(ShopLoader map : shopLoader.getMap().values()) {
+			ItemStack is;
+			if(map.isItemsAdder() && m.itemsAdder) {
+				CustomStack ia = CustomStack.getInstance(map.getType().toLowerCase());
+				is = ia.getItemStack();
 			}
+			else
+				is = new ItemStack(Material.getMaterial(map.getType()), 1);
+			ItemMeta im = is.getItemMeta();
+			im.setDisplayName(SimpleShop.nonFormat(map.getName()));
+			map.getLore().add(0 ,"Price $" + String.valueOf(map.getPrice()));
+			im.setLore(SimpleShop.format(map.getLore()));
+			map.getLore().remove(0);
+			try {
+				for (int en = 0; en < map.getID().size(); en++) {
+					Enchantment enc = enchant.getEnchantment(map.getID().get(en));
+					if(enc == null) continue;
+					if(map.getTypeEnchant().equalsIgnoreCase("book")) {
+						EnchantmentStorageMeta enchantBook = (EnchantmentStorageMeta) im;
+						enchantBook.addStoredEnchant(enc, map.getLevel().get(en), true);
+						im = (ItemMeta)enchantBook;
+					}
+					else if(map.getTypeEnchant().equalsIgnoreCase("normal")){
+						im.addEnchant(enc, map.getLevel().get(en), true);
+					}
+				}
+			}catch (Exception e) {
+			}
+			is.setItemMeta(im);
+			
+			mapPrice.put(count, map.getPrice());
+			is.setAmount(map.getAmount() / 1 > 0? map.getAmount() : 1);
+			inv.setItem(count, is);
+			count++;
+		}
 		
 		for(int i = 0; i < INVSLOT; i++) {
 			if(inv.getItem(i) == null) {

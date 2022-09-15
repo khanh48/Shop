@@ -13,13 +13,13 @@ public class Enchantments {
 		loadKey();
 	}
 	
-	void loadKey() {
+	private void loadKey() {
 		for (Enchantment e : Enchantment.values()) {
 			enc.put(e.getKey().toString(), e);
 		}
 	}
 	
-	public String getKey(String key) {
+	private String getKey(String key) {
 		return NamespacedKey.MINECRAFT + ":" + key;
 	}
 	

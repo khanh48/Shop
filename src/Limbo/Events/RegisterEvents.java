@@ -14,5 +14,6 @@ public class RegisterEvents {
 		manager.registerEvents(main.getSell(), main);
 		manager.registerEvents(main.getShop(), main);
 		manager.registerEvents(main.getTrade(), main);
+		manager.registerEvents(main.getCitizens(), main);
 	}
 }

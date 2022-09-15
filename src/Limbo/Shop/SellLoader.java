@@ -1,25 +1,25 @@
 package Limbo.Shop;
 
-import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 
 import Limbo.SimpleShop;
-import dev.lone.itemsadder.api.CustomStack;
 
 public class SellLoader {
 	String name;
 	ItemStack itemStack;
 	double price;
 	SimpleShop m;
-	List<SellLoader> item;
+	HashMap<String, SellLoader> item;
 	
 	public SellLoader() 
 	{
 		this.m = SimpleShop.getIntance();
-		item = new ArrayList<>();
+		item = new HashMap<>();
 		loadConfig();
 	}
 	
@@ -34,16 +34,14 @@ public class SellLoader {
 		if(type == null) return;
 		for (String s : type) {
 			String []sp = s.split("-");
-			ItemStack is;
-			if(isItemsAdder(sp[0]) && m.itemsAdderIsEnable()) {
-				CustomStack customStack = CustomStack.getInstance(sp[0]);
-				is = customStack.getItemStack();
-			}
-			else {
+			ItemStack is = null;
+			try {
 				is = new ItemStack(Material.getMaterial(sp[0].toUpperCase()));
+			}catch (Exception e) {
+				SimpleShop.sendMessage(Bukkit.getConsoleSender(), "&cCan't load the item "+ sp[0] + " recheck material in shop.yml!");
 			}
 			
-			item.add(new SellLoader(sp[0].toUpperCase(), is, Double.parseDouble(sp[1])));
+			item.put(sp[0].toUpperCase(), new SellLoader(sp[0].toUpperCase(), is, Double.parseDouble(sp[1])));
 		}
 	}
 	
@@ -60,29 +58,11 @@ public class SellLoader {
 		return itemStack;
 	}
 	
-	public boolean isItemsAdder() {
-		List<String> namespace = m.shopConfig.getConfig().getStringList("itemsadder.namespace");
-		if(namespace != null)
-			for (String string : namespace)
-				if(getName().contains(string.toLowerCase()))
-					return true;
-		return false;
-	}
-
-	public boolean isItemsAdder(String type) {
-		List<String> namespace = m.shopConfig.getConfig().getStringList("itemsadder.namespace");
-		if(namespace != null)
-			for (String string : namespace)
-				if(type.toLowerCase().contains(string.toLowerCase()))
-					return true;
-		return false;
-	}
-	
 	public double getPrice() {
 		return this.price;
 	}
 	
-	public List<SellLoader> getMap() {
+	public HashMap<String, SellLoader> getMap() {
 		return this.item;
 	}
 }

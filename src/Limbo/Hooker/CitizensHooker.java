@@ -18,9 +18,11 @@ public class CitizensHooker implements Listener{
 	NPC npc;
 	List<Integer> listNpc;
 	SimpleShop main;
+	
 	public CitizensHooker(){
 		main = SimpleShop.getIntance();
 		if(Bukkit.getPluginManager().getPlugin("Citizens") == null) {
+			main.citizens = false;
 			SimpleShop.sendMessage(main.getServer().getConsoleSender(), "Can't hook into Citizens");
 			return;
 		}
@@ -29,7 +31,7 @@ public class CitizensHooker implements Listener{
 	
 	@EventHandler
 	public void enableCitizens(CitizensEnableEvent e) {
-		npc = CitizensAPI.getNPCRegistry().createNPC(EntityType.PLAYER, SimpleShop.format("&6&lSimpleShop"));
+		npc = CitizensAPI.getNPCRegistry().createNPC(EntityType.PLAYER, SimpleShop.nonFormat("&6&lSimpleShop"));
 	}
 	
 	@EventHandler
@@ -53,7 +55,7 @@ public class CitizensHooker implements Listener{
 		npc.spawn(p.getLocation());
 		listNpc.add(npc.getId());
 		main.dataConfig.getConfig().set("npc", listNpc);
-		main.dataConfig.saveConfig();;
+		main.dataConfig.saveConfig();
 	}
 	
 	public NPC getNPC() {

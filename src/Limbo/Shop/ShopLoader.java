@@ -82,11 +82,11 @@ public class ShopLoader {
 	}
 	
 	public boolean isItemsAdder() {
-		List<String> namespace = m.shopConfig.getConfig().getStringList("itemsadder.namespace");
-		if(namespace != null)
-			for (String string : namespace)
-				if(getType().contains(string.toLowerCase()))
-					return true;
+		if(type.contains(":")) {
+			String tmp = type.split(":")[0];
+			if(!tmp.equalsIgnoreCase("minecraft"))
+				return true;
+		}
 		return false;
 	}
 	

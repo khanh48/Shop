@@ -17,8 +17,8 @@ public class VaultHooker {
 	public VaultHooker() {
 		this.m = SimpleShop.getIntance();
 		if (!setupEconomy()) {
+            SimpleShop.sendMessage(m.getServer().getConsoleSender(), "&cCan't hook into Vault!");
             Bukkit.getPluginManager().disablePlugin(m);
-            SimpleShop.sendMessage(m.getServer().getConsoleSender(), "Can't hook into Vault!");
             return;
         }
         this.setupPermissions();

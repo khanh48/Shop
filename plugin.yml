@@ -1,18 +1,20 @@
 name: SimpleShop
 main: Limbo.SimpleShop
-authors: [Limbo48]
+author: Limbo48
 version: 1.0
 api-version: 1.18
-softdepend: [Vault, ItemsAdder]
-depend: [Citizens]
+softdepend: [ItemsAdder]
+depend: [Vault, Citizens]
 
 commands:
   shop:
     description: Open Shop
+    aliases: [ss]
   sreload:
     description: Reload config
   transfer:
     description: Give money to player
+    aliases: [tf, givemoney, bank]
 
 permissions:
   shop.admin:
@@ -21,9 +23,14 @@ permissions:
       shop.sell: true
       shop.trade: true
       shop.shop: true
+      shop.transfer: true
   shop.shop:
     default: op
   shop.sell:
     default: op
   shop.trade:
     default: op
+  shop.transfer:
+    default: true
+  shop.bypass:
+    default: false

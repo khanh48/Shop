@@ -2,16 +2,15 @@ package Limbo;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.Callable;
 
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.util.StringUtil;
 
-import Limbo.Commands.Commands;
 import Limbo.Commands.RegisterCommands;
-import Limbo.Commands.ReloadCommand;
 import Limbo.Config.ConfigManager;
 import Limbo.Events.RegisterEvents;
 import Limbo.Hooker.CitizensHooker;
@@ -28,44 +27,32 @@ public class SimpleShop extends JavaPlugin{
 	private Shop shop;
 	private Trade trade;
 	private Sell sell;
-	private VaultHooker vault;
-	private CitizensHooker citizens;
 	private RegisterCommands commands;
 	private RegisterEvents events;
+	private Hook hook;
 	public ConfigManager shopConfig, dataConfig, message;
+	public boolean itemsAdder, citizens;
 	
 	public SimpleShop() {
+		itemsAdder = true;
+		citizens = true;
+		intance = this;
 	}
 	
 	@Override
 	public void onEnable() {
-		intance = this;
 		saveDefaultConfig();
 		shopConfig = new ConfigManager("shop");
 		dataConfig = new ConfigManager("data");
 		message = new ConfigManager("message");
-		vault = new VaultHooker();
-		citizens = new CitizensHooker();
-		shop = new Shop();
+		hook = new Hook();
 		sell = new Sell();
+		shop = new Shop();
 		trade = new Trade();
 		events = new RegisterEvents();
-		Commands cmd = new Commands();
-		getCommand("shop").setExecutor(cmd);
-		getCommand("sreload").setExecutor(new ReloadCommand());
+		commands = new RegisterCommands();
 		Metrics metrics = new Metrics(this, 16429);
-		metrics.addCustomChart(new Metrics.SimplePie("use_ia", new Callable<String>() {
-			@Override
-			public String call() throws Exception {
-				return getConfig().getString("itemsadder.enable");
-			}
-		}));
-		metrics.addCustomChart(new Metrics.SimplePie("disable_village", new Callable<String>() {
-			@Override
-			public String call() throws Exception {
-				return getConfig().getString("disable_village_trade");
-			}
-		}));
+		metrics.addCustomChart(new Metrics.SimplePie("disable_village", () -> getConfig().getString("disable_village_trade")));
 	}
 	
 	public static SimpleShop getIntance() {
@@ -94,12 +81,8 @@ public class SimpleShop extends JavaPlugin{
 	}
 	public static void sendMessage(CommandSender sender, Message message, double value) {
 		String tmp = "";
-		if(message.getMsg.contains("%money%")) {
-			tmp = message.getMsg.replace("%money%", String.valueOf(value));
-		}
-		if(message.getMsg.contains("%limit%")) {
-			tmp = message.getMsg.replace("%limit%", String.valueOf((int)value));
-		}
+		tmp = message.replace("%money%", String.valueOf(value));
+		tmp = tmp.replace("%limit%", String.valueOf((int)value));
 		sender.sendMessage(format(tmp));
 	}
 	
@@ -108,15 +91,15 @@ public class SimpleShop extends JavaPlugin{
 	}
 	
 	public static void sendMessage(CommandSender sender, Message message) {
-		sender.sendMessage(format(message.getMsg));
+		sender.sendMessage(format(message.getMessage));
 	}
 	
 	public VaultHooker getEco() {
-		return vault;
+		return this.hook.getVault();
 	}
 	
 	public CitizensHooker getCitizens() {
-		return this.citizens;
+		return this.hook.getCitizens();
 	}
 	
 	public Shop getShop() {
@@ -131,13 +114,6 @@ public class SimpleShop extends JavaPlugin{
 		return sell;
 	}
 	
-	public void reload() {
-		reloadConfig();
-		dataConfig.reloadConfig();
-		message.reloadConfig();
-		shopConfig.reloadConfig();
-	}
-	
 	public RegisterCommands getRegisterCommands() {
 		return commands;
 	}
@@ -146,7 +122,11 @@ public class SimpleShop extends JavaPlugin{
 		return events;
 	}
 	
-	public static boolean giveMoney(Player player, Player toPlayer, double money) {
+	public static boolean giveMoney(Player player, String name, double money) {
+		
+		Player toPlayer = Bukkit.getPlayer(name);
+		if(toPlayer == null)
+			sendMessage(player, "&cPlayer " + name + " not found!");
 		if(intance.getEco().getEconomy().getBalance(player) >= money) {
 			if(toPlayer.isOnline()) {
 				intance.getEco().getEconomy().withdrawPlayer(player, money);
@@ -155,12 +135,15 @@ public class SimpleShop extends JavaPlugin{
 				sendMessage(toPlayer, Message.TAKE_MONEY);
 				return true;
 			}
-			sendMessage(player, "Can't find player " + toPlayer.getName());
 		}
 		return false;
 	}
 	
-	public boolean itemsAdderIsEnable() {
-		return getConfig().getBoolean("itemsadder.enable");
+	public void reload() {
+		reloadConfig();
+		dataConfig.reloadConfig();
+		message.reloadConfig();
+		shopConfig.reloadConfig();
 	}
+	
 }

@@ -52,7 +52,7 @@ public class UpdateChecker {
 					else
 					{
 						SimpleShop.sendMessage(Bukkit.getConsoleSender(), "&6There is a new update available.");
-						SimpleShop.sendMessage(Bukkit.getConsoleSender(), "&6Dowload it here: https://www.spigotmc.org/resources/advanced-anti-auto-fishing.104939");
+						SimpleShop.sendMessage(Bukkit.getConsoleSender(), "&6Dowload it here: https://www.spigotmc.org/resources/simple-shop.104939");
 						
 					}
 				});
