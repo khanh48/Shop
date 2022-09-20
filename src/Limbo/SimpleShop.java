@@ -8,7 +8,6 @@ import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.bukkit.util.StringUtil;
 
 import Limbo.Commands.RegisterCommands;
 import Limbo.Config.ConfigManager;
@@ -46,9 +45,9 @@ public class SimpleShop extends JavaPlugin{
 		dataConfig = new ConfigManager("data");
 		message = new ConfigManager("message");
 		hook = new Hook();
-		sell = new Sell();
 		shop = new Shop();
 		trade = new Trade();
+		sell = new Sell();
 		events = new RegisterEvents();
 		commands = new RegisterCommands();
 		Metrics metrics = new Metrics(this, 16429);
@@ -79,10 +78,16 @@ public class SimpleShop extends JavaPlugin{
 			tmp.add(nonFormat(string));
 		return tmp;
 	}
+	
 	public static void sendMessage(CommandSender sender, Message message, double value) {
 		String tmp = "";
 		tmp = message.replace("%money%", String.valueOf(value));
-		tmp = tmp.replace("%limit%", String.valueOf((int)value));
+		sender.sendMessage(format(tmp));
+	}
+	
+	public static void sendMessage(CommandSender sender, Message message, int value) {
+		String tmp = "";
+		tmp = message.replace("%limit%", String.valueOf(value));
 		sender.sendMessage(format(tmp));
 	}
 	
@@ -131,8 +136,8 @@ public class SimpleShop extends JavaPlugin{
 			if(toPlayer.isOnline()) {
 				intance.getEco().getEconomy().withdrawPlayer(player, money);
 				intance.getEco().getEconomy().depositPlayer(toPlayer, money);
-				sendMessage(player, Message.BALANCE);
-				sendMessage(toPlayer, Message.TAKE_MONEY);
+				sendMessage(player, Message.BALANCE, money);
+				sendMessage(toPlayer, Message.TAKE_MONEY, money);
 				return true;
 			}
 		}
@@ -144,6 +149,9 @@ public class SimpleShop extends JavaPlugin{
 		dataConfig.reloadConfig();
 		message.reloadConfig();
 		shopConfig.reloadConfig();
+		shop.reload();
+		sell.reload();
+		hook.getCitizens().reload();
 	}
 	
 }

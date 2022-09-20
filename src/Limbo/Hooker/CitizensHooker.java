@@ -10,11 +10,10 @@ import org.bukkit.event.Listener;
 
 import Limbo.SimpleShop;
 import net.citizensnpcs.api.CitizensAPI;
-import net.citizensnpcs.api.event.CitizensEnableEvent;
 import net.citizensnpcs.api.event.NPCRightClickEvent;
 import net.citizensnpcs.api.npc.NPC;
 
-public class CitizensHooker implements Listener{
+public class CitizensHooker  implements Listener{
 	NPC npc;
 	List<Integer> listNpc;
 	SimpleShop main;
@@ -27,11 +26,6 @@ public class CitizensHooker implements Listener{
 			return;
 		}
 		loadNPC();
-	}
-	
-	@EventHandler
-	public void enableCitizens(CitizensEnableEvent e) {
-		npc = CitizensAPI.getNPCRegistry().createNPC(EntityType.PLAYER, SimpleShop.nonFormat("&6&lSimpleShop"));
 	}
 	
 	@EventHandler
@@ -50,8 +44,9 @@ public class CitizensHooker implements Listener{
 		if(main.dataConfig.getConfig().getIntegerList("npc") == null) return;
 		listNpc = main.dataConfig.getConfig().getIntegerList("npc");
 	}
-	
 	public void create(Player p) {
+		if(!main.citizens) return;
+		npc = CitizensAPI.getNPCRegistry().createNPC(EntityType.PLAYER, SimpleShop.nonFormat("&6&lSimpleShop"));
 		npc.spawn(p.getLocation());
 		listNpc.add(npc.getId());
 		main.dataConfig.getConfig().set("npc", listNpc);
@@ -60,5 +55,9 @@ public class CitizensHooker implements Listener{
 	
 	public NPC getNPC() {
 		return this.npc;
+	}
+	
+	public void reload() {
+		loadNPC();
 	}
 }

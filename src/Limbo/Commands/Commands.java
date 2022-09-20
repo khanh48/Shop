@@ -1,8 +1,7 @@
 package Limbo.Commands;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.TreeSet;
-import java.util.stream.Collectors;
 
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -16,16 +15,16 @@ import Limbo.Shop.Sell;
 
 public class Commands implements CommandExecutor,TabCompleter{
 	SimpleShop shop;
-	TreeSet<String> queue;
+	List<String> queue;
 	
 	public Commands() {
 		shop = SimpleShop.getIntance();
-		queue = new TreeSet<>((a, b) -> a.compareTo(b));
+		queue = new ArrayList<>();
 		queue.add("trade");
-		queue.add("transfer");
 		queue.add("create");
 		queue.add("sell");
 		queue.add("reload");
+		queue.sort((a, b) -> a.compareTo(b));
 	}
 
 	@Override
@@ -38,7 +37,7 @@ public class Commands implements CommandExecutor,TabCompleter{
 				player.openInventory(shop.getShop().getInv());
 			else
 				SimpleShop.sendMessage(sender, Message.HASNT_PERM);
-			return false;
+			return true;
 		}
 		
 		else if(arg[0].equalsIgnoreCase("sell")) {
@@ -60,7 +59,7 @@ public class Commands implements CommandExecutor,TabCompleter{
 					SimpleShop.sendMessage(player, Message.HASNT_PERM);
 			else
 				SimpleShop.sendMessage(sender, Message.CONSOLE);
-			return false;
+			return true;
 			}
 		else if(arg[0].equalsIgnoreCase("create")) {
 			if(isPlayer)
@@ -70,23 +69,26 @@ public class Commands implements CommandExecutor,TabCompleter{
 					SimpleShop.sendMessage(player, Message.HASNT_PERM);
 			else
 				SimpleShop.sendMessage(sender, Message.CONSOLE);
-			return false;
+			return true;
 		}
 		if(isPlayer && !player.hasPermission("shop.admin")) {
 			SimpleShop.sendMessage(player, Message.HASNT_PERM);
 			return false;
 		}
-		shop.reload();
-		SimpleShop.sendMessage(sender, Message.RELOAD);
+		if(arg.length > 0)
+			if(arg[0].equalsIgnoreCase("reload")) {
+				shop.reload();
+				SimpleShop.sendMessage(sender, Message.RELOAD);
+			}
 		return false;
 	}
 
 	@Override
 	public List<String> onTabComplete(CommandSender sender, Command command, String label, String[] args) {
-		if(!command.getName().equalsIgnoreCase("shop"))
+		if(!command.getName().equalsIgnoreCase("simpleshop"))
 			return null;
 		if(args.length == 1)
-			return queue.stream().collect(Collectors.toList());
+			return queue;
 		return null;
 	}
 

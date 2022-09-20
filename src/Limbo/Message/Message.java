@@ -21,6 +21,10 @@ public enum Message {
 		this.getMessage = msg;
 	}
 	
+	public boolean contains(String string) {
+		return this.getMessage.toLowerCase().contains(string.toLowerCase());
+	}
+	
 	public String replace(String target, String replacement) {
         return this.getMessage.replaceAll("(?i)" + target, replacement);
     }

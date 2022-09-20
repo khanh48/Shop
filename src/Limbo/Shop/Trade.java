@@ -36,6 +36,7 @@ public class Trade implements Listener{
 	public Trade() {
 		this.m = SimpleShop.getIntance();
 		inv = m.getServer().createInventory(null, 54, "TRADE");
+		load();
 	}
 
 	@EventHandler
@@ -148,7 +149,7 @@ public class Trade implements Listener{
 		}
 	}
 	
-	public void load() {
+	void load() {
 		int slot;
 		double price;
 		String name;

@@ -40,21 +40,18 @@ public class Sell implements Listener{
 		SLOTSELL = INVSLOT - 9;
 		loader = new SellLoader();
 		invlist = Bukkit.createInventory(null, INVSLOT, "List Item");
+		loadInv();
 	}
 
 	@EventHandler
 	public void onOpenInv(InventoryOpenEvent e) {
 		createInv((Player) e.getPlayer());
-		if(e.getInventory().equals(invlist)) {
-			loader = new SellLoader();
-			loadInv();
-		}
 	}
 	
 	public void createInv(Player p) {
 		if(!inv.containsKey(p)) {
 			Inventory temp = Bukkit.createInventory(p, INVSLOT, "SELL");
-			temp.setItem(SELLBUTTON, createGuiItem(Material.EMERALD, true, SimpleShop.nonFormat("&r&lTotal $0"), 1));
+			temp.setItem(SELLBUTTON, createGuiItem(Material.EMERALD, true, SimpleShop.nonFormat("&r&lSell All"), 1));
 			temp.setItem(LISTBUTTON, createGuiItem(Material.BOOK, true, "Item can sell", 1,"List of item you can sell here"));
 			temp.setItem(SLOTSELL, createGuiItem(Material.BOOK, true, "Shop", 1));
 			for(int i = SLOTSELL; i < INVSLOT; i++) {
@@ -77,16 +74,12 @@ public class Sell implements Listener{
 			price += cur.getAmount() * sell.getPrice();
 			e.getClickedInventory().clear(i);
 		}
-		
-		ItemMeta im = e.getInventory().getItem(SELLBUTTON).getItemMeta();
-		im.setDisplayName(SimpleShop.format("&r&lTotal $", String.valueOf(price)));
-		e.getInventory().getItem(SELLBUTTON).setItemMeta(im);
 	}
 	
 	
 	public void loadInv() {
 		int id = 0;
-
+		invlist.clear();
 		invlist.setItem(SLOTSELL, createGuiItem(Material.BOOK, true, "Back", 1," "));
 		for(SellLoader sell : loader.getMap().values()) {
 			invlist.setItem(id, createGuiItem(sell.getItem(), true, "", 1, "Price $"+ String.valueOf(sell.getPrice())));
@@ -123,13 +116,11 @@ public class Sell implements Listener{
 		Player p = (Player) e.getWhoClicked();
 		if(item == null || item.getType().isAir()) return;
 		if(e.getInventory().equals(inv.get(p))) {
-			Bukkit.getScheduler().runTaskLater(m, () -> {
-				updatePrice(e);
-			}, 10);
 			if(e.getRawSlot() >= SLOTSELL && e.getRawSlot() < INVSLOT) {
 				e.setCancelled(true);
 			}
 			if(item.equals(e.getInventory().getItem(SELLBUTTON))) {
+				updatePrice(e);
 				giveMoney(price, p);
 				if(price > 0) SimpleShop.sendMessage(p, Message.TAKE_MONEY, price);
 			}
@@ -158,6 +149,11 @@ public class Sell implements Listener{
 
 	public SellLoader getSell() {
 		return this.loader;
+	}
+	
+	public void reload() {
+		loader.reload();
+		loadInv();
 	}
 
 }

@@ -3,13 +3,13 @@ main: Limbo.SimpleShop
 author: Limbo48
 version: 1.0
 api-version: 1.18
-softdepend: [ItemsAdder]
-depend: [Vault, Citizens]
+softdepend: [ItemsAdder, Citizens]
+depend: [Vault]
 
 commands:
-  shop:
+  simpleshop:
     description: Open Shop
-    aliases: [ss]
+    aliases: [ss, shop]
   sreload:
     description: Reload config
   transfer:
@@ -24,6 +24,7 @@ permissions:
       shop.trade: true
       shop.shop: true
       shop.transfer: true
+      shop.bypass: true
   shop.shop:
     default: op
   shop.sell:

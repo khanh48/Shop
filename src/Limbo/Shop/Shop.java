@@ -52,17 +52,18 @@ public class Shop implements Listener{
 	
 	void loadInv() {
 		int count = 0;
-		shopLoader = new ShopLoader();
 		mapPrice.clear();
 
 		for(ShopLoader map : shopLoader.getMap().values()) {
-			ItemStack is;
+			ItemStack is = null;
 			if(map.isItemsAdder() && m.itemsAdder) {
 				CustomStack ia = CustomStack.getInstance(map.getType().toLowerCase());
-				is = ia.getItemStack();
+				if(ia != null)
+					is = ia.getItemStack();	
 			}
-			else
+			else 
 				is = new ItemStack(Material.getMaterial(map.getType()), 1);
+			if(is == null) continue;
 			ItemMeta im = is.getItemMeta();
 			im.setDisplayName(SimpleShop.nonFormat(map.getName()));
 			map.getLore().add(0 ,"Price $" + String.valueOf(map.getPrice()));
@@ -148,17 +149,18 @@ public class Shop implements Listener{
 		saveList(listLimit, p);
 		return true;
 	}
-
-	@EventHandler
-	public void onJoin(PlayerJoinEvent e) {
-		loadConfig((Player) e.getPlayer());
-	}
+	
 
 	@EventHandler
 	public void onOpenS(InventoryOpenEvent e) {
 		if(e.getInventory().equals(inv)) {
 			this.loadInv();
 		}
+	}
+
+	@EventHandler
+	public void onJoin(PlayerJoinEvent e) {
+		loadConfig((Player) e.getPlayer());
 	}
 
 	@EventHandler
@@ -187,7 +189,7 @@ public class Shop implements Listener{
 					SimpleShop.sendMessage(p, Message.LIMIT, shopLoader.getMap().get(e.getRawSlot()).getLimit());
 			}
 			else {
-				SimpleShop.sendMessage(p,Message.CANT_BUY);
+				SimpleShop.sendMessage(p, Message.CANT_BUY);
 			}
 		}
 	}
@@ -202,5 +204,10 @@ public class Shop implements Listener{
 	
 	public HashMap<String, Integer> getLimit() {
 		return this.listLimit;
+	}
+	
+	public void reload() {
+		listLimit.clear();
+		shopLoader.reload();
 	}
 }

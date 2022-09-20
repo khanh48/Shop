@@ -9,8 +9,8 @@ public class RegisterCommands {
 
 		Commands commands = new Commands();
 		TransferCommand transferCommand = new TransferCommand();
-		main.getCommand("shop").setExecutor(commands);
-		main.getCommand("shop").setTabCompleter(commands);
+		main.getCommand("simpleshop").setExecutor(commands);
+		main.getCommand("simpleshop").setTabCompleter(commands);
 		main.getCommand("sreload").setExecutor(new ReloadCommand());
 		main.getCommand("transfer").setExecutor(transferCommand);
 		main.getCommand("transfer").setTabCompleter(transferCommand);
