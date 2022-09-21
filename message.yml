@@ -1,5 +1,6 @@
-#  %money% show money only use in (take_money, take_from, balance)
-#  %player% Player name use in (take_from)
+#  %money% show money only use in (take_money, take_from, balance, bought)
+#  %player% Player name use in (take_from, bought)
+#  %item% item name use in (bought)
 #  %limit% show limit number per day for item (limit)
 
 message:
