@@ -6,22 +6,17 @@
 			<attribute name="module" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="C:/Users/ADMIN/Documents/Spigot/Spigot-API/target/spigot-api-1.18.2-R0.1-SNAPSHOT.jar">
+	<classpathentry kind="lib" path="C:/Users/duykhanh.ng1/Documents/Spigot/Spigot-API/target/Citizens.jar">
 		<attributes>
 			<attribute name="module" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="C:/Users/ADMIN/Documents/Spigot/Spigot-API/target/Vault.jar">
+	<classpathentry kind="lib" path="C:/Users/duykhanh.ng1/Documents/Spigot/Spigot-API/target/ItemsAdder.jar">
 		<attributes>
 			<attribute name="module" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="C:/Users/ADMIN/Documents/Spigot/Spigot-API/target/ItemsAdder.jar">
-		<attributes>
-			<attribute name="module" value="true"/>
-		</attributes>
-	</classpathentry>
-	<classpathentry kind="lib" path="C:/Users/ADMIN/Documents/Spigot/Spigot-API/target/Citizens.jar">
+	<classpathentry kind="lib" path="C:/Users/duykhanh.ng1/Documents/Spigot/Spigot-API/target/Vault.jar">
 		<attributes>
 			<attribute name="module" value="true"/>
 		</attributes>

@@ -24,6 +24,7 @@ public class Commands implements CommandExecutor,TabCompleter{
 		queue.add("create");
 		queue.add("sell");
 		queue.add("reload");
+		queue.add("help");
 		queue.sort((a, b) -> a.compareTo(b));
 	}
 
@@ -71,15 +72,17 @@ public class Commands implements CommandExecutor,TabCompleter{
 				SimpleShop.sendMessage(sender, Message.CONSOLE);
 			return true;
 		}
-		if(isPlayer && !player.hasPermission("shop.admin")) {
-			SimpleShop.sendMessage(player, Message.HASNT_PERM);
-			return false;
-		}
-		if(arg.length > 0)
-			if(arg[0].equalsIgnoreCase("reload")) {
-				shop.reload();
-				SimpleShop.sendMessage(sender, Message.RELOAD);
+		else if(arg[0].equalsIgnoreCase("reload")) {
+			if(isPlayer && !player.hasPermission("shop.admin")) {
+				SimpleShop.sendMessage(player, Message.HASNT_PERM);
+				return false;
 			}
+			shop.reload();
+			SimpleShop.sendMessage(sender, Message.RELOAD);
+			return true;
+		}
+
+		help(sender);
 		return false;
 	}
 
@@ -92,8 +95,19 @@ public class Commands implements CommandExecutor,TabCompleter{
 		return null;
 	}
 
-
+	void help(CommandSender player) {
+		player.sendMessage(SimpleShop.nonFormat("&3&lSimple Shop"));
+		player.sendMessage(SimpleShop.nonFormat("&c&lAliases"));
+		player.sendMessage(SimpleShop.nonFormat("&e[simpleshop, ss, shop]"));
+		player.sendMessage(SimpleShop.nonFormat("&e[transfer, tf, bank, givemoney]"));
+		player.sendMessage(SimpleShop.nonFormat("&b&lCommands"));
+		player.sendMessage(SimpleShop.nonFormat("&a/shop: &rOpen shop GUI"));
+		player.sendMessage(SimpleShop.nonFormat("&a/shop create: &rCreate NPC (need Citizens)"));
+		player.sendMessage(SimpleShop.nonFormat("&a/shop sell: &rOpen shop sell GUI"));
+		player.sendMessage(SimpleShop.nonFormat("&a/shop trade: &rOpen trade GUI"));
+		player.sendMessage(SimpleShop.nonFormat("&a/shop reload: &rReload config"));
+		player.sendMessage(SimpleShop.nonFormat("&a/sreload: &rReload config"));
+		player.sendMessage(SimpleShop.nonFormat("&a/transfer <player_name> <amounts>: &rGive money to other player"));
+	}
 	
-	
-
 }

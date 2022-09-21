@@ -1,10 +1,12 @@
+#  Only support origin items
 sell:     #item-price
-  - diamond-500
+  - diamond-400
   - iron_ingot-20
 
+#  Support for ItemsAdder (e.g: type: itemsadder:amethyst)
 items:
   example_item:
-    name: Mending Enchanted Book
+    name: "Mending Enchanted Book"
     type: ENCHANTED_BOOK    #key item
     amount: 1
     price: 100000
@@ -14,4 +16,17 @@ items:
       id:
         - mending-1         #name-level
     lore:
-      - "Mua tại shop"
+      - "&r&3&oSimple Shop"
+  sword:
+    name: "&6&lDiamond Sword"
+    type: DIAMOND_SWORD
+    amount: 1
+    price: 150000
+    limit: 3
+    enchants:
+      type: normal
+      id:
+        - sharpness-7
+        - unbreaking-3
+    lore:
+      - "&r&3&oSimple Shop"

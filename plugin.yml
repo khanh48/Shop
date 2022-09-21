@@ -18,7 +18,7 @@ commands:
 
 permissions:
   shop.admin:
-    default: false
+    default: op
     children:
       shop.sell: true
       shop.trade: true
@@ -30,7 +30,7 @@ permissions:
   shop.sell:
     default: op
   shop.trade:
-    default: op
+    default: true
   shop.transfer:
     default: true
   shop.bypass:

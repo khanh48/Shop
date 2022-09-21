@@ -15,6 +15,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryAction;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryDragEvent;
+import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryView;
@@ -32,6 +33,7 @@ public class Trade implements Listener{
 	Trader tmp;
 	HashMap<Integer, Trader> listTrade = new HashMap<>();
 	boolean input = false, cancel = false;
+	static final long day = 86400000; // 1 day
 	
 	public Trade() {
 		this.m = SimpleShop.getIntance();
@@ -55,9 +57,12 @@ public class Trade implements Listener{
 			if(m.getEco().getEconomy().getBalance((OfflinePlayer) p) >= temp.getPrice()) {
 				e.getCurrentItem().setItemMeta(removeInfo(temp.getItem().getItemMeta()));
 				OfflinePlayer nhan = m.getServer().getOfflinePlayer(temp.getUUID());
-				m.getEco().getEconomy().depositPlayer(nhan, temp.getPrice());
+				double costs = temp.getPrice();
+				if(m.getConfig().getDouble("costs") > 0)
+					costs *= m.getConfig().getDouble("costs");
+				m.getEco().getEconomy().depositPlayer(nhan, costs);
 				if(nhan.isOnline()) {
-					SimpleShop.sendMessage(nhan.getPlayer(), Message.TAKE_MONEY, temp.getPrice());
+					SimpleShop.sendMessage(nhan.getPlayer(), Message.TAKE_MONEY, costs, temp.getItem().getItemMeta().getDisplayName(), p.getName());
 				}
 				m.getEco().getEconomy().withdrawPlayer((OfflinePlayer) p, temp.getPrice());
 				listTrade.remove(e.getRawSlot());
@@ -78,7 +83,7 @@ public class Trade implements Listener{
 		}
 		else if(e.getAction().equals(InventoryAction.PLACE_ALL)) {
 			cancel = false;
-			tmp = new Trader(p.getName(), p.getUniqueId(), 0 , e.getCursor().clone(), e.getRawSlot());
+			tmp = new Trader(p.getName(), p.getUniqueId(), System.currentTimeMillis(), 0 , e.getCursor().clone(), e.getRawSlot());
 			input = true;
 			e.setCancelled(true);
 			SimpleShop.sendMessage(p, Message.ENTER_MONEY);
@@ -91,6 +96,13 @@ public class Trade implements Listener{
 	public void onDrag(InventoryDragEvent e) {
 		if(!e.getInventory().equals(inv)) return;
 		e.setCancelled(true);
+	}
+	
+
+	@EventHandler
+	public void onOpen(InventoryOpenEvent e) {
+		if(!e.getInventory().equals(inv)) return;
+			autoRemove();
 	}
 	
 	private ItemMeta removeInfo(ItemMeta itemMeta) {
@@ -116,6 +128,21 @@ public class Trade implements Listener{
 		}
 		is.setAmount(temp - num);
 		it.getBottomInventory().addItem(is);
+	}
+	
+	void autoRemove() {
+		if(m.autoRemove()) {
+			int days = m.getConfig().getInt("auto-remove-items-in-trade.after");
+			long cur = System.currentTimeMillis();
+			for (Trader trader : listTrade.values()) {
+				if(cur > (trader.getDay() + (day * days))) {
+					inv.clear(trader.slot);
+					listTrade.remove(trader.slot);
+					m.dataConfig.getConfig().set("trade." + String.valueOf(trader.getSlot()), null);
+					m.dataConfig.saveConfig();
+				}
+			}
+		}
 	}
 	
 	@EventHandler
@@ -150,20 +177,21 @@ public class Trade implements Listener{
 	}
 	
 	void load() {
-		int slot;
 		double price;
+		long lastTimes;
 		String name;
 		UUID uuid;
 		ItemStack is;
 		ConfigurationSection cfg = m.dataConfig.getConfig().getConfigurationSection("trade");
 		if(cfg == null) return;
 		for(String s :cfg.getKeys(false)) {
+			int slot = Integer.valueOf(s);
 			name = m.dataConfig.getConfig().getString("trade." + s + ".name");
-			slot =  m.dataConfig.getConfig().getInt("trade." + s + ".slot");
+			lastTimes =  m.dataConfig.getConfig().getLong("trade." + s + ".lastTimes");
 			uuid = UUID.fromString(m.dataConfig.getConfig().getString("trade." + s + ".uuid"));
 			price = m.dataConfig.getConfig().getDouble("trade." + s + ".price");
 			is = (ItemStack) m.dataConfig.getConfig().get("trade." + s + ".item");
-			listTrade.put(slot, new Trader(name, uuid, price, is, slot));
+			listTrade.put(slot, new Trader(name, uuid, lastTimes, price, is, slot));
 		}
 		
 		for (Trader sl : listTrade.values()) {
@@ -177,7 +205,7 @@ public class Trade implements Listener{
 		m.dataConfig.saveConfig();
 		for (Trader sl : listTrade.values()) {
 			m.dataConfig.getConfig().set("trade." + String.valueOf(sl.getSlot()) + ".name", sl.getName());
-			m.dataConfig.getConfig().set("trade." + String.valueOf(sl.getSlot()) + ".slot", sl.getSlot());
+			m.dataConfig.getConfig().set("trade." + String.valueOf(sl.getSlot()) + ".lastTimes", sl.getDay());
 			m.dataConfig.getConfig().set("trade." + String.valueOf(sl.getSlot()) + ".uuid", sl.getUUID().toString());
 			m.dataConfig.getConfig().set("trade." + String.valueOf(sl.getSlot()) + ".price", sl.getPrice());
 			m.dataConfig.getConfig().set("trade." + String.valueOf(sl.getSlot()) + ".item", sl.getItem());

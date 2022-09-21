@@ -1,14 +1,17 @@
-#  %money% show money only use in (take_money, balance)
+#  %money% show money only use in (take_money, take_from, balance)
+#  %player% Player name use in (take_from)
 #  %limit% show limit number per day for item (limit)
 
 message:
-  trade_village_msg: "You don't have permisson to do this"
-  take_money: "You have received $%money%"
-  limit: "You can only buy %limit% of this item per day!"
-  balance: "New balance $%money%"
-  cant_buy: "You don't have enough money!"
-  enter_money: "&lEnter the money you want to sell:"
+  trade_village_msg: "&cYou don't have permisson to do this"
+  take_money: "&6You have received $%money%"
+  take_from: "&6You have received $%money% from &b&l%player%"
+  bought: "&6&l%player%&r&6 bought &l%item%&r&6, you get $%money%"
+  limit: "&eYou can only buy %limit% of this item per day!"
+  balance: "&6New balance $%money%"
+  cant_buy: "&eYou don't have enough money!"
+  enter_money: "&e&lEnter the money you want to sell:"
   trade_error: "&cYou need to enter the number!"
-  console: "This command can't be used in console"
+  console: "&eThis command can't be used in console"
   hasnt_perm: "&cYou don't have permisson to perform this command"
-  reload: "Reloaded!"
+  reload: "&aReloaded!"

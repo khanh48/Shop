@@ -10,13 +10,15 @@ public class Trader {
 	UUID  uuid;
 	String name;
 	int slot, maxLen;
+	long lastTimes;
 	ItemStack item;
 	double price;
 	
-	public Trader(String name, UUID uuid, double price, ItemStack item, int slot) {
+	public Trader(String name, UUID uuid, long lastTimes, double price, ItemStack item, int slot) {
 		this.name = name;
 		this.uuid = uuid;
 		this.price = price;
+		this.lastTimes = lastTimes;
 		this.slot = slot;
 		this.item = item;
 	}
@@ -43,6 +45,9 @@ public class Trader {
 	
 	public double getPrice() {
 		return this.price;
+	}
+	public long getDay() {
+		return this.lastTimes;
 	}
 	
 	public int getSlot() {

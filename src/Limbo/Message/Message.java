@@ -7,6 +7,7 @@ import Limbo.SimpleShop;
 public enum Message {
 	TRADE_VILLAGE_MSG(SimpleShop.getIntance().message.getConfig().getString("message.trade_village_msg")),
 	TAKE_MONEY(SimpleShop.getIntance().message.getConfig().getString("message.take_money")),
+	TAKE_FROM(SimpleShop.getIntance().message.getConfig().getString("message.take_from")),
 	BALANCE(SimpleShop.getIntance().message.getConfig().getString("message.balance")),
 	HASNT_PERM(SimpleShop.getIntance().message.getConfig().getString("message.hasnt_perm")),
 	LIMIT(SimpleShop.getIntance().message.getConfig().getString("message.limit")),
@@ -27,5 +28,10 @@ public enum Message {
 	
 	public String replace(String target, String replacement) {
         return this.getMessage.replaceAll("(?i)" + target, replacement);
+    }
+	
+
+	public static String replace(String src, String target, String replacement) {
+        return src.replaceAll("(?i)" + target, replacement);
     }
 }

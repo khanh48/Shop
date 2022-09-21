@@ -1,3 +1,13 @@
 disable-village-trade: true
+
+# Transaction Costs
+# e.g: player A give &10000 to B. B will got $9500 (with costs: 0.05)
+# Use for trade and transfer (0 for disable costs)
+costs: 0.05
+
+auto-remove-items-in-trade:
+  enable: true
+  after: 5       # remove after 5 days if no one buys it
+
 slot-sell: 54
 slot-shop: 54

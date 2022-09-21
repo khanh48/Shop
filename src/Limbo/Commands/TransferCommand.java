@@ -13,7 +13,7 @@ import Limbo.SimpleShop;
 import Limbo.Message.Message;
 
 public class TransferCommand implements CommandExecutor, TabExecutor{
-List<String> list;
+	List<String> list;
 	public TransferCommand() {
 		list = Arrays.asList("1000", "10000", "100000");
 	}
@@ -25,7 +25,8 @@ List<String> list;
 				Player player = (Player) sender;
 				if(player.hasPermission("shop.transfer")) {
 					try {
-						SimpleShop.giveMoney(player, arg[0], Double.parseDouble(arg[1]));
+						double money = Double.parseDouble(arg[1]);
+						SimpleShop.giveMoney(player, arg[0], money);
 					}catch (Exception e) {
 						SimpleShop.sendMessage(sender, Message.TRADE_ERROR);
 					}

@@ -51,7 +51,9 @@ public class SimpleShop extends JavaPlugin{
 		events = new RegisterEvents();
 		commands = new RegisterCommands();
 		Metrics metrics = new Metrics(this, 16429);
-		metrics.addCustomChart(new Metrics.SimplePie("disable_village", () -> getConfig().getString("disable_village_trade")));
+		metrics.addCustomChart(new Metrics.SimplePie("disable_village", () -> getConfig().getString("disable-village-trade")));
+		metrics.addCustomChart(new Metrics.SimplePie("costs", () -> getConfig().getString("costs")));
+		metrics.addCustomChart(new Metrics.SimplePie("auto_remove", () -> getConfig().getString("auto-remove-items-in-trade.enable")));
 	}
 	
 	public static SimpleShop getIntance() {
@@ -62,16 +64,13 @@ public class SimpleShop extends JavaPlugin{
 		return ChatColor.translateAlternateColorCodes('&', "&3&l[SimpleShop]&r " + msg);
 	}
 	
-	public static String nonFormat(String msg) {
-		return ChatColor.translateAlternateColorCodes('&', msg);
-	}
-	
 	public static String format(String... msg) {
 		String tmp = "";
 		for (String string : msg)
 			tmp += string;
 		return ChatColor.translateAlternateColorCodes('&', tmp);
 	}
+	
 	public static List<String> format(List<String> msg) {
 		List<String> tmp = new ArrayList<>();
 		for (String string : msg)
@@ -79,9 +78,25 @@ public class SimpleShop extends JavaPlugin{
 		return tmp;
 	}
 	
+	public static String nonFormat(String msg) {
+		return ChatColor.translateAlternateColorCodes('&', msg);
+	}
+	
 	public static void sendMessage(CommandSender sender, Message message, double value) {
 		String tmp = "";
 		tmp = message.replace("%money%", String.valueOf(value));
+		sender.sendMessage(format(tmp));
+	}
+	
+	public static void sendMessage(CommandSender sender, Message message, double money, String name) {
+		String tmp = "";
+		tmp = Message.replace(message.replace("%money%", String.valueOf(money)), "%player%", name);
+		sender.sendMessage(format(tmp));
+	}
+
+	public static void sendMessage(CommandSender sender, Message message, double money, String item, String player) {
+		String tmp = "";
+		tmp = Message.replace(Message.replace(message.replace("%money%", String.valueOf(money)), "%player%", player), "%item%", item);
 		sender.sendMessage(format(tmp));
 	}
 	
@@ -131,13 +146,16 @@ public class SimpleShop extends JavaPlugin{
 		
 		Player toPlayer = Bukkit.getPlayer(name);
 		if(toPlayer == null)
-			sendMessage(player, "&cPlayer " + name + " not found!");
+			sendMessage(player, "&cPlayer &l" + name + "&r not found!");
 		if(intance.getEco().getEconomy().getBalance(player) >= money) {
 			if(toPlayer.isOnline()) {
+				Double tmp = money;
+				if(intance.getConfig().getDouble("costs") > 0) 
+					tmp *= intance.getConfig().getDouble("costs");
 				intance.getEco().getEconomy().withdrawPlayer(player, money);
-				intance.getEco().getEconomy().depositPlayer(toPlayer, money);
+				intance.getEco().getEconomy().depositPlayer(toPlayer, tmp);
 				sendMessage(player, Message.BALANCE, money);
-				sendMessage(toPlayer, Message.TAKE_MONEY, money);
+				sendMessage(toPlayer, Message.TAKE_FROM, tmp, player.getName());
 				return true;
 			}
 		}
@@ -154,4 +172,7 @@ public class SimpleShop extends JavaPlugin{
 		hook.getCitizens().reload();
 	}
 	
+	public boolean autoRemove() {
+		return getConfig().getBoolean("auto-remove-items-in-trade.enable");
+	}
 }
