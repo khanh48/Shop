@@ -57,12 +57,12 @@ public class Trade implements Listener{
 			if(m.getEco().getEconomy().getBalance((OfflinePlayer) p) >= temp.getPrice()) {
 				e.getCurrentItem().setItemMeta(removeInfo(temp.getItem().getItemMeta()));
 				OfflinePlayer nhan = m.getServer().getOfflinePlayer(temp.getUUID());
-				double costs = temp.getPrice();
+				double costs = 0;
 				if(m.getConfig().getDouble("costs") > 0)
-					costs *= m.getConfig().getDouble("costs");
-				m.getEco().getEconomy().depositPlayer(nhan, costs);
+					costs = temp.getPrice() * m.getConfig().getDouble("costs");
+				m.getEco().getEconomy().depositPlayer(nhan, temp.getPrice() - costs);
 				if(nhan.isOnline()) {
-					SimpleShop.sendMessage(nhan.getPlayer(), Message.TAKE_MONEY, costs, temp.getItem().getItemMeta().getDisplayName(), p.getName());
+					SimpleShop.sendMessage(nhan.getPlayer(), Message.BOUGHT, temp.getPrice() -  costs, temp.getItem().getItemMeta().getDisplayName(), p.getName());
 				}
 				m.getEco().getEconomy().withdrawPlayer((OfflinePlayer) p, temp.getPrice());
 				listTrade.remove(e.getRawSlot());

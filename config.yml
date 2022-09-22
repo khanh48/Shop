@@ -1,7 +1,7 @@
 disable-village-trade: true
 
 # Transaction Costs
-# e.g: player A give &10000 to B. B will got $9500 (with costs: 0.05)
+# e.g: player A give $10000 to B. B will got $9500 (with costs: 0.05)
 # Use for trade and transfer (0 for disable costs)
 costs: 0.05
 

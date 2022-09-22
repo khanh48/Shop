@@ -5,17 +5,18 @@ import java.lang.String;
 import Limbo.SimpleShop;
 
 public enum Message {
-	TRADE_VILLAGE_MSG(SimpleShop.getIntance().message.getConfig().getString("message.trade_village_msg")),
-	TAKE_MONEY(SimpleShop.getIntance().message.getConfig().getString("message.take_money")),
-	TAKE_FROM(SimpleShop.getIntance().message.getConfig().getString("message.take_from")),
-	BALANCE(SimpleShop.getIntance().message.getConfig().getString("message.balance")),
-	HASNT_PERM(SimpleShop.getIntance().message.getConfig().getString("message.hasnt_perm")),
-	LIMIT(SimpleShop.getIntance().message.getConfig().getString("message.limit")),
-	CANT_BUY(SimpleShop.getIntance().message.getConfig().getString("message.cant_buy")),
-	ENTER_MONEY(SimpleShop.getIntance().message.getConfig().getString("message.enter_money")),
-	TRADE_ERROR(SimpleShop.getIntance().message.getConfig().getString("message.trade_error")),
-	CONSOLE(SimpleShop.getIntance().message.getConfig().getString("message.console")),
-	RELOAD(SimpleShop.getIntance().message.getConfig().getString("message.reload"));
+	TRADE_VILLAGE_MSG(message("trade_village_msg")),
+	TAKE_MONEY(message("take_money")),
+	TAKE_FROM(message("take_from")),
+	BOUGHT(message("bought")),
+	BALANCE(message("balance")),
+	HASNT_PERM(message("hasnt_perm")),
+	LIMIT(message("limit")),
+	CANT_BUY(message("cant_buy")),
+	ENTER_MONEY(message("enter_money")),
+	TRADE_ERROR(message("trade_error")),
+	CONSOLE(message("console")),
+	RELOAD(message("reload"));
 	
 	public final String getMessage;
 	private Message(String msg) {
@@ -30,6 +31,9 @@ public enum Message {
         return this.getMessage.replaceAll("(?i)" + target, replacement);
     }
 	
+	private static String message(String name) {
+		return SimpleShop.getIntance().message.getConfig().getString("message." + name);
+	}
 
 	public static String replace(String src, String target, String replacement) {
         return src.replaceAll("(?i)" + target, replacement);

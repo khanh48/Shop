@@ -6,8 +6,8 @@
 message:
   trade_village_msg: "&cYou don't have permisson to do this"
   take_money: "&6You have received $%money%"
-  take_from: "&6You have received $%money% from &b&l%player%"
-  bought: "&6&l%player%&r&6 bought &l%item%&r&6, you get $%money%"
+  take_from: "&6You have received $%money% from &3&l%player%"
+  bought: "&3&l%player%&r&6 bought &3&l%item%&r&6, you get $%money%"
   limit: "&eYou can only buy %limit% of this item per day!"
   balance: "&6New balance $%money%"
   cant_buy: "&eYou don't have enough money!"

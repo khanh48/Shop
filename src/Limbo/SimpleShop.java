@@ -149,13 +149,13 @@ public class SimpleShop extends JavaPlugin{
 			sendMessage(player, "&cPlayer &l" + name + "&r not found!");
 		if(intance.getEco().getEconomy().getBalance(player) >= money) {
 			if(toPlayer.isOnline()) {
-				Double tmp = money;
+				double tmp = 0;
 				if(intance.getConfig().getDouble("costs") > 0) 
-					tmp *= intance.getConfig().getDouble("costs");
+					tmp = money * intance.getConfig().getDouble("costs");
 				intance.getEco().getEconomy().withdrawPlayer(player, money);
-				intance.getEco().getEconomy().depositPlayer(toPlayer, tmp);
+				intance.getEco().getEconomy().depositPlayer(toPlayer, money - tmp);
 				sendMessage(player, Message.BALANCE, money);
-				sendMessage(toPlayer, Message.TAKE_FROM, tmp, player.getName());
+				sendMessage(toPlayer, Message.TAKE_FROM, money - tmp, player.getName());
 				return true;
 			}
 		}
