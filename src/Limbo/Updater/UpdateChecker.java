@@ -1,6 +1,7 @@
 package Limbo.Updater;
 
 import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import Limbo.SimpleShop;
@@ -51,6 +52,11 @@ public class UpdateChecker {
 					}
 					else
 					{
+						for (Player player : plugin.getServer().getOnlinePlayers())
+							if(player.hasPermission("shop.admin")) {
+								SimpleShop.sendMessage(player, "&6&lThere is a new update available.");
+								SimpleShop.sendMessage(player, "&6Dowload it here: https://www.spigotmc.org/resources/simple-shop." + resourceId);
+							}
 						SimpleShop.sendMessage(Bukkit.getConsoleSender(), "&6There is a new update available.");
 						SimpleShop.sendMessage(Bukkit.getConsoleSender(), "&6Dowload it here: https://www.spigotmc.org/resources/simple-shop." + resourceId);
 						
@@ -58,6 +64,6 @@ public class UpdateChecker {
 				});
 			}
 		};
-		checker.runTaskTimerAsynchronously(plugin, 100, 24000);
+		checker.runTaskTimerAsynchronously(plugin, 100, 288000);
     }
 }

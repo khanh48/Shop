@@ -32,56 +32,57 @@ public class Commands implements CommandExecutor,TabCompleter{
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] arg) {
 		boolean isPlayer = false;
 		Player player = (Player) sender;
-		if(sender instanceof Player) isPlayer = true;
-		if(arg.length == 0 || arg[0] == null) {
-			if(isPlayer && player.hasPermission("shop.shop")) 
-				player.openInventory(shop.getShop().getInv());
-			else
-				SimpleShop.sendMessage(sender, Message.HASNT_PERM);
-			return true;
-		}
-		
-		else if(arg[0].equalsIgnoreCase("sell")) {
+		if(sender instanceof Player) {
+			isPlayer = true;
+			if(arg.length == 0 || arg[0] == null) {
+				if(player.hasPermission("shop.shop")) {
+					player.openInventory(shop.getShop().getInv());
+					return true;
+				}
+				else
+					SimpleShop.sendMessage(sender, Message.HASNT_PERM);
+			}
 			
-			if(isPlayer)
-				if(player.hasPermission("shop.sell"))
-					player.openInventory(Sell.getInv(player));
-				else
-					SimpleShop.sendMessage(player, Message.HASNT_PERM);
-			else
-				SimpleShop.sendMessage(sender, Message.CONSOLE);
-			return true;
-		}
-		else if(arg[0].equalsIgnoreCase("trade")) {
-			if(isPlayer)
-				if(player.hasPermission("shop.trade"))
-					player.openInventory(shop.getTrade().getInv());
-				else
-					SimpleShop.sendMessage(player, Message.HASNT_PERM);
-			else
-				SimpleShop.sendMessage(sender, Message.CONSOLE);
-			return true;
+			else if(arg[0].equalsIgnoreCase("sell")) {
+				
+					if(player.hasPermission("shop.sell")) {
+						player.openInventory(Sell.getInv(player));
+						return true;
+					}
+					else
+						SimpleShop.sendMessage(player, Message.HASNT_PERM);
 			}
-		else if(arg[0].equalsIgnoreCase("create")) {
-			if(isPlayer)
-				if(player.hasPermission("shop.admin"))
-					shop.getCitizens().create(player);
-				else
-					SimpleShop.sendMessage(player, Message.HASNT_PERM);
-			else
-				SimpleShop.sendMessage(sender, Message.CONSOLE);
-			return true;
-		}
-		else if(arg[0].equalsIgnoreCase("reload")) {
-			if(isPlayer && !player.hasPermission("shop.admin")) {
-				SimpleShop.sendMessage(player, Message.HASNT_PERM);
-				return false;
+			else if(arg[0].equalsIgnoreCase("trade")) {
+					if(player.hasPermission("shop.trade")) {
+						player.openInventory(shop.getTrade().getInv());
+						return true;
+					}
+					else
+						SimpleShop.sendMessage(player, Message.HASNT_PERM);
+				}
+			else if(arg[0].equalsIgnoreCase("create")) {
+					if(player.hasPermission("shop.admin")) {
+						shop.getCitizens().create(player);
+						return true;
+					}
+					else
+						SimpleShop.sendMessage(player, Message.HASNT_PERM);
 			}
-			shop.reload();
-			SimpleShop.sendMessage(sender, Message.RELOAD);
-			return true;
 		}
-
+		if(arg.length > 0)
+			if(arg[0].equalsIgnoreCase("reload")) {
+				if(isPlayer && !player.hasPermission("shop.admin")) {
+					SimpleShop.sendMessage(player, Message.HASNT_PERM);
+					return false;
+				}
+				shop.reload();
+				SimpleShop.sendMessage(sender, Message.RELOAD);
+				return true;
+			}
+		if(!isPlayer) {
+			SimpleShop.sendMessage(sender, Message.CONSOLE);
+			return false;
+		}
 		help(sender);
 		return false;
 	}
@@ -96,18 +97,18 @@ public class Commands implements CommandExecutor,TabCompleter{
 	}
 
 	void help(CommandSender player) {
-		player.sendMessage(SimpleShop.nonFormat("&3&lSimple Shop"));
-		player.sendMessage(SimpleShop.nonFormat("&c&lAliases"));
+		player.sendMessage(SimpleShop.nonFormat("&3&l>>> Simple Shop <<<"));
+		player.sendMessage(SimpleShop.nonFormat("&c&l> Aliases"));
 		player.sendMessage(SimpleShop.nonFormat("&e[simpleshop, ss, shop]"));
 		player.sendMessage(SimpleShop.nonFormat("&e[transfer, tf, bank, givemoney]"));
-		player.sendMessage(SimpleShop.nonFormat("&b&lCommands"));
+		player.sendMessage(SimpleShop.nonFormat("&b&l> Commands"));
 		player.sendMessage(SimpleShop.nonFormat("&a/shop: &rOpen shop GUI"));
 		player.sendMessage(SimpleShop.nonFormat("&a/shop create: &rCreate NPC (need Citizens)"));
 		player.sendMessage(SimpleShop.nonFormat("&a/shop sell: &rOpen shop sell GUI"));
 		player.sendMessage(SimpleShop.nonFormat("&a/shop trade: &rOpen trade GUI"));
 		player.sendMessage(SimpleShop.nonFormat("&a/shop reload: &rReload config"));
 		player.sendMessage(SimpleShop.nonFormat("&a/sreload: &rReload config"));
-		player.sendMessage(SimpleShop.nonFormat("&a/transfer <player_name> <amounts>: &rGive money to other player"));
+		player.sendMessage(SimpleShop.nonFormat("&a/transfer <player> <amounts>: &rGive money to other player"));
 	}
 	
 }
