@@ -31,16 +31,18 @@ public class Commands implements CommandExecutor,TabCompleter{
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] arg) {
 		boolean isPlayer = false;
-		Player player = (Player) sender;
 		if(sender instanceof Player) {
+			Player player = (Player) sender;
 			isPlayer = true;
 			if(arg.length == 0 || arg[0] == null) {
 				if(player.hasPermission("shop.shop")) {
 					player.openInventory(shop.getShop().getInv());
 					return true;
 				}
-				else
-					SimpleShop.sendMessage(sender, Message.HASNT_PERM);
+				else {
+					SimpleShop.sendMessage(player, Message.HASNT_PERM);
+					return false;
+				}
 			}
 			
 			else if(arg[0].equalsIgnoreCase("sell")) {
@@ -49,30 +51,36 @@ public class Commands implements CommandExecutor,TabCompleter{
 						player.openInventory(Sell.getInv(player));
 						return true;
 					}
-					else
+					else {
 						SimpleShop.sendMessage(player, Message.HASNT_PERM);
+						return false;
+					}
 			}
 			else if(arg[0].equalsIgnoreCase("trade")) {
 					if(player.hasPermission("shop.trade")) {
 						player.openInventory(shop.getTrade().getInv());
 						return true;
 					}
-					else
+					else {
 						SimpleShop.sendMessage(player, Message.HASNT_PERM);
+						return false;
+					}
 				}
 			else if(arg[0].equalsIgnoreCase("create")) {
 					if(player.hasPermission("shop.admin")) {
 						shop.getCitizens().create(player);
 						return true;
 					}
-					else
+					else {
 						SimpleShop.sendMessage(player, Message.HASNT_PERM);
+						return false;
+					}
 			}
 		}
 		if(arg.length > 0)
 			if(arg[0].equalsIgnoreCase("reload")) {
-				if(isPlayer && !player.hasPermission("shop.admin")) {
-					SimpleShop.sendMessage(player, Message.HASNT_PERM);
+				if(!sender.hasPermission("shop.admin")) {
+					SimpleShop.sendMessage(sender, Message.HASNT_PERM);
 					return false;
 				}
 				shop.reload();

@@ -62,7 +62,8 @@ public class Trade implements Listener{
 					costs = temp.getPrice() * m.getConfig().getDouble("costs");
 				m.getEco().getEconomy().depositPlayer(nhan, temp.getPrice() - costs);
 				if(nhan.isOnline()) {
-					SimpleShop.sendMessage(nhan.getPlayer(), Message.BOUGHT, temp.getPrice() -  costs, temp.getItem().getItemMeta().getDisplayName(), p.getName());
+					String iName = temp.getItem().getItemMeta().hasDisplayName() ? tmp.getItem().getItemMeta().getDisplayName() : tmp.getItem().getType().name();
+					SimpleShop.sendMessage(nhan.getPlayer(), Message.BOUGHT, temp.getPrice() -  costs, iName, p.getName());
 				}
 				m.getEco().getEconomy().withdrawPlayer((OfflinePlayer) p, temp.getPrice());
 				listTrade.remove(e.getRawSlot());
@@ -135,6 +136,7 @@ public class Trade implements Listener{
 			int days = m.getConfig().getInt("auto-remove-items-in-trade.after");
 			long cur = System.currentTimeMillis();
 			for (Trader trader : listTrade.values()) {
+				trader.lastTimes =  m.dataConfig.getConfig().getLong("trade." + trader.getSlot() + ".lastTimes");
 				if(cur > (trader.getDay() + (day * days))) {
 					inv.clear(trader.slot);
 					listTrade.remove(trader.slot);
@@ -171,6 +173,9 @@ public class Trade implements Listener{
 				tmp.getItem().setItemMeta(im);
 				inv.setItem(tmp.getSlot(), tmp.getItem());
 				listTrade.put(tmp.getSlot(), tmp);
+
+				String iName = tmp.getItem().getItemMeta().hasDisplayName() ? tmp.getItem().getItemMeta().getDisplayName() : tmp.getItem().getType().name();
+				SimpleShop.sendMessage(e.getPlayer(), Message.SELLING, tmp.getPrice(), iName, e.getPlayer().getName());
 				save();
 			});
 		}
@@ -184,7 +189,7 @@ public class Trade implements Listener{
 		ItemStack is;
 		ConfigurationSection cfg = m.dataConfig.getConfig().getConfigurationSection("trade");
 		if(cfg == null) return;
-		for(String s :cfg.getKeys(false)) {
+		for(String s : cfg.getKeys(false)) {
 			int slot = Integer.valueOf(s);
 			name = m.dataConfig.getConfig().getString("trade." + s + ".name");
 			lastTimes =  m.dataConfig.getConfig().getLong("trade." + s + ".lastTimes");

@@ -13,6 +13,7 @@ public enum Message {
 	HASNT_PERM(message("hasnt_perm")),
 	LIMIT(message("limit")),
 	CANT_BUY(message("cant_buy")),
+	SELLING(message("selling")),
 	ENTER_MONEY(message("enter_money")),
 	TRADE_ERROR(message("trade_error")),
 	CONSOLE(message("console")),

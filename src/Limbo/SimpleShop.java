@@ -144,26 +144,37 @@ public class SimpleShop extends JavaPlugin{
 	
 	public static boolean giveMoney(Player player, String name, double money) {
 		
-		Player toPlayer = Bukkit.getPlayer(name);
-		if(toPlayer == null)
-			sendMessage(player, "&cPlayer &l" + name + "&r not found!");
-		if(intance.getEco().getEconomy().getBalance(player) >= money) {
+		Player toPlayer = Bukkit.getPlayerExact(name);
+		if(toPlayer == null) {
+			sendMessage(player, "&cPlayer &l" + name + "&r&c not found!");
+			return false;
+		}
+		if(getBalance(player) >= money) {
 			if(toPlayer.isOnline()) {
 				double tmp = 0;
 				if(intance.getConfig().getDouble("costs") > 0) 
 					tmp = money * intance.getConfig().getDouble("costs");
 				intance.getEco().getEconomy().withdrawPlayer(player, money);
 				intance.getEco().getEconomy().depositPlayer(toPlayer, money - tmp);
-				sendMessage(player, Message.BALANCE, money);
+				sendMessage(player, Message.BALANCE, getBalance(player));
 				sendMessage(toPlayer, Message.TAKE_FROM, money - tmp, player.getName());
 				return true;
+			}else {
+				sendMessage(player, "&cPlayer &l" + name + "&r&c is offline!");
+				return false;
 			}
-		}
+		}else
+			sendMessage(player, Message.CANT_BUY);
 		return false;
+	}
+	
+	public static double getBalance(Player player) {
+		return intance.getEco().getEconomy().getBalance(player);
 	}
 	
 	public void reload() {
 		reloadConfig();
+		saveDefaultConfig();
 		dataConfig.reloadConfig();
 		message.reloadConfig();
 		shopConfig.reloadConfig();

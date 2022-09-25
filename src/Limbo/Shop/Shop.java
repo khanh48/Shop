@@ -183,7 +183,7 @@ public class Shop implements Listener{
 				if(canBuy(p, shopLoader.getMap().get(e.getRawSlot()).getTag(), shopLoader.getMap().get(e.getRawSlot()).getLimit())) {
 					p.getInventory().addItem(it);
 					m.getEco().getEconomy().withdrawPlayer((OfflinePlayer) p, tmp);
-					SimpleShop.sendMessage(p, Message.BALANCE, m.getEco().getEconomy().getBalance((OfflinePlayer) p));
+					SimpleShop.sendMessage(p, Message.BALANCE, SimpleShop.getBalance(p));
 					
 				}else
 					SimpleShop.sendMessage(p, Message.LIMIT, shopLoader.getMap().get(e.getRawSlot()).getLimit());
