@@ -82,27 +82,27 @@ public class SimpleShop extends JavaPlugin{
 		return ChatColor.translateAlternateColorCodes('&', msg);
 	}
 	
-	public static void sendMessage(CommandSender sender, Message message, double value) {
+	public static void sendMessage(CommandSender sender, String message, double value) {
 		String tmp = "";
-		tmp = message.replace("%money%", String.valueOf(value));
+		tmp = Message.replace(message, "%money%", String.valueOf(value));
 		sender.sendMessage(format(tmp));
 	}
 	
-	public static void sendMessage(CommandSender sender, Message message, double money, String name) {
+	public static void sendMessage(CommandSender sender, String message, double money, String name) {
 		String tmp = "";
-		tmp = Message.replace(message.replace("%money%", String.valueOf(money)), "%player%", name);
+		tmp = Message.replace(Message.replace(message, "%money%", String.valueOf(money)), "%player%", name);
 		sender.sendMessage(format(tmp));
 	}
 
-	public static void sendMessage(CommandSender sender, Message message, double money, String item, String player) {
+	public static void sendMessage(CommandSender sender, String message, double money, String item, String player) {
 		String tmp = "";
-		tmp = Message.replace(Message.replace(message.replace("%money%", String.valueOf(money)), "%player%", player), "%item%", item);
+		tmp = Message.replace(Message.replace(Message.replace(message, "%money%", String.valueOf(money)), "%player%", player), "%item%", item);
 		sender.sendMessage(format(tmp));
 	}
 	
-	public static void sendMessage(CommandSender sender, Message message, int value) {
+	public static void sendMessage(CommandSender sender, String message, int value) {
 		String tmp = "";
-		tmp = message.replace("%limit%", String.valueOf(value));
+		tmp = Message.replace(message, "%limit%", String.valueOf(value));
 		sender.sendMessage(format(tmp));
 	}
 	
@@ -110,9 +110,6 @@ public class SimpleShop extends JavaPlugin{
 		sender.sendMessage(format(message));
 	}
 	
-	public static void sendMessage(CommandSender sender, Message message) {
-		sender.sendMessage(format(message.getMessage));
-	}
 	
 	public VaultHooker getEco() {
 		return this.hook.getVault();
@@ -181,6 +178,7 @@ public class SimpleShop extends JavaPlugin{
 		shop.reload();
 		sell.reload();
 		hook.getCitizens().reload();
+		Message.reload();
 	}
 	
 	public boolean autoRemove() {

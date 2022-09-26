@@ -2,6 +2,6 @@ module NSS {
 	requires org.bukkit;
 	requires ItemsAdder;
 	requires Vault;
-	requires java.logging;
 	requires Citizens;
+	requires java.logging;
 }
